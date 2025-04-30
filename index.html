@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Algebra Dino Runner</title>
+  <style>
+    canvas { background: #f4f4f4; display: block; margin: 20px auto; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Algebra Practice Dino Runner</h1>
+  <canvas id="game" width="800" height="200"></canvas>
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    let dino = { x: 50, y: 150, vy: 0, jump: -15, gravity: 1, width: 20, height: 20 };
+    let ground = 180;
+    let cactus = { x: 800, width: 20, height: 40 };
+    let gameOver = false;
+
+    function draw() {
+      if (gameOver) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      dino.vy += dino.gravity;
+      dino.y += dino.vy;
+      if (dino.y > ground) {
+        dino.y = ground;
+        dino.vy = 0;
+      }
+      cactus.x -= 5;
+      if (cactus.x < -20) cactus.x = 800 + Math.random() * 200;
+
+      if (dino.x < cactus.x + cactus.width &&
+          dino.x + dino.width > cactus.x &&
+          dino.y < ground + cactus.height &&
+          dino.y + dino.height > ground) {
+        gameOver = true;
+        alert('Game Over!');
+        return;
+      }
+
+      ctx.fillStyle = 'black';
+      ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
+      ctx.fillRect(cactus.x, ground + 20 - cactus.height, cactus.width, cactus.height);
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('keydown', () => {
+      if (dino.y >= ground) dino.vy = dino.jump;
+    });
+  </script>
+</body>
+</html>
